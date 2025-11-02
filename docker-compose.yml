@@ -1,0 +1,16 @@
+---
+name: backend-database
+services:
+  database:
+    image: postgres:17.5-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      # Default password intended for local development used only!
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: dataWeb
+    volumes:
+      - "database-data:/var/lib/postgresql/data"
+
+volumes:
+  database-data:
