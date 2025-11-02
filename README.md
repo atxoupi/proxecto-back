@@ -150,4 +150,4 @@ docker compose down -v
 ## 📜 Licenza
 
 Este proxecto está baixo a licenza Apache 2.0.
-Podes consultar o texto completo en http://www.apache.org/licenses/LICENSE-2.0[http://www.apache.org/licenses/LICENSE-2.0]
+Podes consultar o texto completo en [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
