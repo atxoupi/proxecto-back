@@ -124,10 +124,12 @@ O servidor executaráse por defecto en [http://localhost:8000](http://localhost:
 ## 🧰 Estructura do proxecto
 
 ```
-📦 teu-repo/
- ┣ 📁 app/                 # Aplicacións de Django
+📦 proxecto-back/
+ ┣ 📁 bakend/              # Aplicacións de Django
  ┣ 📁 templates/           # Plantillas HTML
  ┣ 📁 static/              # Arquivos estáticos
+ ┣ 📁 bknd_auth/           # Aplicación aitenticación
+ ┣ 📁 bknd_talleres/       # Aplicación almacenaxe de talleres
  ┣ 📄 manage.py
  ┣ 📄 pyproject.toml
  ┣ 📄 docker-compose.yml
