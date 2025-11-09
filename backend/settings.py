@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     # Own
     'bknd_talleres',
+    'bknd_auth',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Auth
+AUTH_USER_MODEL = "bknd_auth.User"
