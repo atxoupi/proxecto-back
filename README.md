@@ -21,8 +21,8 @@ Asegúrate de ter instalados:
 ### 1️⃣ Clonar o repositorio
 
 ```bash
-git clone https://github.com/teu-usuario/teu-repo.git
-cd teu-repo
+git clone https://github.com/atxoupi/proxecto-back.git
+cd proxecto-back
 ```
 
 ### 2️⃣ Instalar dependencias con Poetry
