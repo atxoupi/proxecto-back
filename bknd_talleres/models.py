@@ -6,7 +6,9 @@ class TallerService(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=255)
     text = models.TextField()
-    image = models.URLField(max_length=200)
+
+    image = models.URLField(max_length=500, null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

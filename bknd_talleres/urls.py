@@ -1,11 +1,12 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .views import TallerServiceViewSet
+from .views import TallerServiceViewSet, ImageUploadView
 
 router = DefaultRouter()
 router.register(r'talleres', TallerServiceViewSet, basename='tallerservice')
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('talleres/upload/', ImageUploadView.as_view(), name='image-upload'),
+    path('', include(router.urls))
 ]
