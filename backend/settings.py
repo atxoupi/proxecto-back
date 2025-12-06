@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from corsheaders.defaults import default_headers
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +29,21 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CORS_ALLOW_ALL_ORIGINS = False
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'sessionid',
+]
+
+CORS_ALLOW_CREDENTIALS = True  
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+]
 
 # Application definition
 
@@ -40,6 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Third_party
     'rest_framework',
+    "corsheaders",
     # Own
     'bknd_talleres',
     'bknd_auth',
@@ -48,6 +66,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -131,6 +150,16 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+#Media
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Auth
 AUTH_USER_MODEL = "bknd_auth.User"
+
+
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SECURE = False
+
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SECURE = False

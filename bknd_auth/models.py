@@ -1,8 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-    BaseUserManager,
-)
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class UserManager(BaseUserManager):
@@ -17,8 +14,12 @@ class UserManager(BaseUserManager):
             raise ValueError("A password is required")
 
         email = self.normalize_email(email)
-        user = self.model(email=email, first_name=first_name, last_name=last_name)
-        user.enabled = True
+        user = self.model(
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            enabled=True,
+        )
         user.set_password(password)
         user.save()
         return user
@@ -26,6 +27,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, first_name, last_name, password=None):
         user = self.create_user(email, first_name, last_name, password)
         user.administrator = True
+        user.is_staff = True
         user.save()
         return user
 
@@ -35,11 +37,18 @@ class User(AbstractBaseUser):
         ordering = ["id"]
 
     id = models.AutoField(primary_key=True)
+
     email = models.EmailField(unique=True)
-    first_name = models.CharField()
-    last_name = models.CharField()
+
+    # FIX: max_length requerido
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
+
     enabled = models.BooleanField(default=False)
     administrator = models.BooleanField(default=False)
+
+    # Necesario para o admin
+    is_staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = "email"
     EMAIL_FIELD = "email"
@@ -54,7 +63,7 @@ class User(AbstractBaseUser):
         return f"{self.first_name} {self.last_name}"
 
     def get_short_name(self):
-        return f"{self.first_name}"
+        return self.first_name
 
     @property
     def is_superuser(self):
@@ -63,6 +72,8 @@ class User(AbstractBaseUser):
     def has_perm(self, perm, obj=None):
         return self.administrator
 
+    def has_module_perms(self, app_label):
+        return self.administrator
 
     @property
     def is_active(self):
