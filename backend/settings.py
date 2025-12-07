@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     # Third_party
     'rest_framework',
     "corsheaders",
+    'drf_spectacular',
     # Own
     'bknd_talleres',
     'bknd_auth',
@@ -127,6 +128,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Cris Nunez API',
+    'DESCRIPTION': 'API para servir los servicios de autenticación y talleres del sitio web de Cris Nunez.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
