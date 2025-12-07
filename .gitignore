@@ -209,3 +209,6 @@ __marimo__/
 
 # Pyenv
 .python-version
+
+# media files
+media/
