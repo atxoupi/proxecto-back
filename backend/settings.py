@@ -104,7 +104,7 @@ DATABASES = {
         'NAME': 'dataWeb',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'localhost',
+        'HOST': 'database',
         'PORT': '5432',
     }
 }

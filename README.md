@@ -42,10 +42,10 @@ O proxecto emprega unha base de datos PostgreSQL dentro dun contedor Docker.
 ### Levantar a base de datos
 
 ```bash
-docker compose up -d
+docker compose up -d database
 ```
 
-Isto creará e levantará o servizo `database` definido no ficheiro `docker-compose.yml` coa seguinte configuración:
+Isto creará e levantará só o servizo `database` definido no ficheiro `docker-compose.yml` coa seguinte configuración:
 
 - **Imaxe:** `postgres:17.5-alpine`
 - **Porto:** `5432`
@@ -60,6 +60,56 @@ docker ps
 ```
 
 ---
+🐳 Dockerización completa do backend
+
+O proxecto contén un docker-compose.yml que permite levantar PostgreSQL + Django en contedores.
+
+A estrutura típica é:
+
+database → PostgreSQL
+
+backend → Django executándose nun contedor, usando Poetry
+📦 1️⃣ Construír a imaxe do backend
+```bash
+docker compose build
+```
+▶️ 2️⃣ Levantar toda a aplicación (backend + BBDD)
+```bash
+docker compose up -d
+```
+Isto levantará:
+
+    PostgreSQL en localhost:5432
+
+    Django en localhost:8000
+
+3️⃣ Executar migracións dentro do contedor
+
+Unha vez os contedores están levantados:
+```bash
+docker compose exec backend poetry run python manage.py migrate
+
+```
+👤 4️⃣ Crear superusuario dentro do contedor
+```bash
+docker compose exec backend poetry run python manage.py createsuperuser
+
+```
+🧪 Comandos útiles con Docker:
+
+| Acción                  | Comando                                                                   |
+| ----------------------- | ------------------------------------------------------------------------- |
+| Construír imaxe         | `docker compose build`                                                    |
+| Levantar todo           | `docker compose up -d`                                                    |
+| Levantar só BDD         | `docker compose up -d database`                                           |
+| Ver logs backend        | `docker compose logs -f backend`                                          |
+| Entrar no contedor      | `docker compose exec backend bash`                                        |
+| Migracións              | `docker compose exec backend poetry run python manage.py migrate`         |
+| Crear superusuario      | `docker compose exec backend poetry run python manage.py createsuperuser` |
+| Apagar contedores       | `docker compose down`                                                     |
+| Apagar + borrar volumes | `docker compose down -v`                                                  |
+
+---
 
 ## 🧩 Configuración de Django
 
@@ -70,19 +120,32 @@ Revisa o ficheiro `settings.py` e asegúrate de que o bloque `DATABASES` teña a
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',       # ou o nome que ti elixas
+        'NAME': 'postgres',   
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'localhost',      # ou 'database' si Django corre en contedor
+        'HOST': 'database', 
         'PORT': '5432',
     }
 }
 ```
-
+Se executas Django fóra do contedor, debes poñer:
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost', 
+        'PORT': '5432',
+    }
+}
+```
 ---
 
 ## 🧱 Migraciones e superusuario
 
+▶️ Execución en local sen Docker
 Cando a base de datos estea levantada, executa as migracións:
 
 ```bash
@@ -141,7 +204,7 @@ O servidor executaráse por defecto en [http://localhost:8000](http://localhost:
 
 ## 🧹 Limpeza
 
-Para detee e eliminar los contedores, volúmenes e redes creadas:
+Para deter e eliminar los contedores, volúmenes e redes creadas:
 
 ```bash
 docker compose down -v
