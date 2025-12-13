@@ -23,6 +23,7 @@ COPY pyproject.toml poetry.lock* ./
 
 # Instalar dependencias del proyecto
 RUN poetry install --no-root --without dev
+RUN poetry add gunicorn
 
 # Copiar el proyecto
 COPY . .
