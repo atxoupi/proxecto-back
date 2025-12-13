@@ -6,7 +6,6 @@ services:
     ports:
       - "5432:5432"
     environment:
-      # Default password intended for local development used only!
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: dataWeb
     volumes:

@@ -1,6 +1,5 @@
 FROM python:3.12-slim
 
-# Evitar mensajes interactivos y mejorar rendimiento
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV POETRY_VIRTUALENVS_CREATE=false
