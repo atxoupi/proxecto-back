@@ -7,7 +7,7 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: dataWeb
+      POSTGRES_DB: dataweb
     volumes:
       - "database-data:/var/lib/postgresql/data"
   backend:
@@ -20,12 +20,8 @@ services:
       - "8000:8000"
     depends_on:
       - database
-    environment:
-      DB_NAME: proxectodb
-      DB_USER: usuario
-      DB_PASSWORD: contrasinal
-      DB_HOST: db
-      DB_PORT: 5432
+    env_file:
+      - .env.dev
 
 volumes:
   database-data:
