@@ -212,3 +212,6 @@ __marimo__/
 
 # media files
 media/
+
+# collected static files
+staticfiles/
