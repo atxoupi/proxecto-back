@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from corsheaders.defaults import default_headers
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,28 +22,54 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-l2vcn!2ugd9uwd&p98dnd%8c*j68(8ybodu3mh!-(rsh!#651+'
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")
 
+CORS_ALLOW_ALL_ORIGINS = False
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "https://coaching.daw.iesrodeira.com",
+]
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'sessionid',
+]
+
+CORS_ALLOW_CREDENTIALS = True  
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+    "https://coaching.daw.iesrodeira.com",
+]
 
 # Application definition
 
 INSTALLED_APPS = [
+    # Django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Third_party
+    'rest_framework',
+    "corsheaders",
+    'drf_spectacular',
+    # Own
+    'bknd_talleres',
+    'bknd_auth',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -74,8 +102,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.postgresql'),
+        'NAME': os.environ.get('DB_NAME', 'dataweb'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', 'postgres'),
+        'HOST': os.environ.get('DB_HOST', 'database'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 
@@ -98,6 +130,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Cris Nunez API',
+    'DESCRIPTION': 'API para servir los servicios de autenticación y talleres del sitio web de Cris Nunez.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -115,8 +157,33 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#Media
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER', '')
+CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL', 'cristinantouceda@gmail.com')
+
+# Auth
+AUTH_USER_MODEL = "bknd_auth.User"
+
+
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SECURE = not DEBUG
+
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SECURE = not DEBUG
